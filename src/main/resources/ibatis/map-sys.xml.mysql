@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sys">
+
+	<resultMap id="userMap" class="com.yu.store.sys.vo.User">
+		<result property="id" column="id"/>
+		<result property="pwd" column="pwd"/>
+		<result property="name" column="name"/>
+		<result property="loginDate" column="login_date"/>
+	</resultMap>
+	
+	<select id="queryUserMaxPage" parameterClass="com.yu.store.sys.vo.User" resultClass="java.lang.Integer">
+		select count(1) 
+		  from user_info
+	  	where 1 = 1
+   	  	  <isNotEmpty prepend="and" property="name">
+            name = #name#
+      	  </isNotEmpty>
+	</select>
+	
+	<select id="queryUserAll" resultMap="userMap" parameterClass="com.yu.store.sys.vo.User">
+		select * from
+		(
+			select a.*, rownum rn from
+				(select id,
+					    pwd,
+					    name,
+			   		    login_date
+			        from user_info
+			      where 1 = 1
+		        	<isNotEmpty prepend="and" property="name">
+		              name = #name#
+		        	</isNotEmpty>
+		        <![CDATA[
+			      order by name) a
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="queryUserDtl" resultMap="userMap" parameterClass="java.lang.String">
+		select id,
+			   pwd,
+			   name,
+			   login_date
+	      from user_info
+	    where id = #id#
+	</select>
+	
+	<insert id="insertUser" parameterClass="com.yu.store.sys.vo.User">
+		insert into user_info
+		  (id, pwd, name, login_date) 
+		values
+		  <!-- date_format -> to_char(sysdate,'%Y/%M/DD hh24:mi') -->
+		  (#id#, #pwd#, #name#, date_format(sysdate(),'%Y/%m/%d %H:%i'))
+	</insert>
+	
+	<update id="updateUser" parameterClass="com.yu.store.sys.vo.User">
+		update user_info set 
+		  pwd = #pwd#
+	      <isNotEmpty prepend="," property="name">
+	  	  name= #name#
+      	  </isNotEmpty>
+		where id = #id# 
+	</update>
+	
+	<update id="updateUserStatus" parameterClass="com.yu.store.sys.vo.User">
+		update user_info set 
+		   <!-- date_format -> to_char(sysdate,'%Y/%M/DD hh24:mi') -->
+		  pwd = #pwd#, login_date = date_format(sysdate(),'%Y/%m/%d %H:%i')
+		where id = #id# and pwd = #pwd# 
+	</update>
+	
+	<delete id="deleteUser" parameterClass="java.lang.String">
+		delete from user_info where id = #id#
+	</delete>
+	
+	<!-- ******************************************************************************* -->
+	<resultMap id="roleMap" class="com.yu.store.sys.vo.Role">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+	</resultMap>
+	
+	<select id="queryRoleMaxPage" parameterClass="com.yu.store.sys.vo.Role" resultClass="java.lang.Integer">
+		select count(1) 
+		  from role_info
+	  	where 1 = 1
+   	  	  <isNotEmpty prepend="and" property="name">
+            name = #name#
+      	  </isNotEmpty>
+	</select>
+	
+	<select id="queryRoleAll" resultMap="roleMap" parameterClass="com.yu.store.sys.vo.Role">
+		select * from
+		(
+			select a.*, rownum rn from
+				(select id,
+					    name
+			        from role_info
+			      where 1 = 1
+		        	<isNotEmpty prepend="and" property="name">
+		              name = #name#
+		        	</isNotEmpty>
+		        <![CDATA[
+			      order by name) a
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="queryRoleDtl" resultMap="roleMap" parameterClass="java.lang.String">
+		select id,
+			   name
+	      from role_info
+	    where id = #id#
+	</select>
+	
+	<insert id="insertRole" parameterClass="com.yu.store.sys.vo.Role">
+		insert into role_info
+		  (name) 
+		values
+		  (#name#)
+		<selectKey resultClass="java.lang.String" keyProperty="id" >
+        	select STORAGE_SEQ.CURRVAL AS orderId FROM DUAL
+        </selectKey> 
+	</insert>
+	
+	<update id="updateRole" parameterClass="com.yu.store.sys.vo.Role">
+		update role_info set 
+	  	  name= #name#
+		where id = #id# 
+	</update>
+	
+	<delete id="deleteRole" parameterClass="java.lang.String">
+		delete from role_info where id = #id#
+	</delete>
+	
+	<!-- ******************************************************************************* -->
+	<resultMap id="userRoleMap" class="com.yu.store.sys.vo.UserRole">
+		<result property="roleId" column="role_id"/>
+		<result property="userId" column="user_id"/>
+	</resultMap>
+	
+	<select id="queryUserRoleAll" resultMap="userRoleMap" parameterClass="com.yu.store.sys.vo.UserRole">
+		select ri.id role_id, 
+		       ui.id user_id
+  		  from user_role ur, role_info ri, user_info ui
+ 	    where ui.id = ur.user_id
+   		  and ri.id = ur.role_id
+   	  	  <isNotEmpty prepend="and" property="userId">
+            ui.id = #userId#
+      	  </isNotEmpty>
+	</select>
+	
+	<insert id="insertUserRole" parameterClass="com.yu.store.sys.vo.UserRole">
+		insert into user_role
+		  (role_id, user_id) 
+		values
+		  (#roleId#, #userId#)
+	</insert>
+	
+	<delete id="deleteUserRole" parameterClass="com.yu.store.sys.vo.User">
+		delete from user_role where user_id = #id#
+	</delete>
+	
+	<!-- ******************************************************************************* -->
+	<resultMap id="roleAuthMap" class="com.yu.store.sys.vo.RoleAuth">
+		<result property="roleId" column="role_id"/>
+		<result property="authId" column="auth_id"/>
+	</resultMap>
+	
+	<select id="queryRoleAuthAll" resultMap="roleAuthMap" parameterClass="com.yu.store.sys.vo.RoleAuth">
+		select ra.role_id, ra.auth_id
+  		  from menu_info mi, role_info ri, role_auth ra
+ 		where mi.id = ra.auth_id
+   		  and ri.id = ra.role_id
+   	  	  <isNotEmpty prepend="and" property="roleId">
+            ri.id = #roleId#
+      	  </isNotEmpty>
+	</select>
+	
+	<insert id="insertRoleAuth" parameterClass="com.yu.store.sys.vo.RoleAuth">
+		insert into role_auth
+		  (role_id, auth_id) 
+		values
+		  (#roleId#, #authId#)
+	</insert>
+	
+	<delete id="deleteRoleAuth" parameterClass="com.yu.store.sys.vo.Role">
+		delete from role_auth where role_id = #id#
+	</delete>
+	
+	<!-- ******************************************************************************* -->
+	<resultMap id="MenuMap" class="com.yu.store.sys.vo.Menu">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="url" column="url"/>
+		<result property="parentId" column="parent_id"/>
+		<result property="seq" column="seq"/>
+	</resultMap>
+	
+	<select id="queryMenuAll" resultMap="MenuMap" parameterClass="com.yu.store.sys.vo.Menu">
+		select id, name, url, parent_id, seq 
+  		  from menu_info
+	</select>
+	
+	<select id="queryMenuAuth" resultMap="MenuMap" parameterClass="java.lang.String">
+		select distinct mi.id, mi.name, mi.url, mi.parent_id, mi.seq
+		  from user_info ui, menu_info mi, user_role ur, role_auth ra
+		where ui.id = #id#
+		  and ui.id = ur.user_id
+		  and ur.role_id = ra.role_id
+		  and mi.id = ra.auth_id
+		order by mi.seq
+	</select>
+</sqlMap>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.1</jsp-version>
+	<short-name>Tag Library for test</short-name>
+	<description>
+        This tag library contains functionality specific to the test package
+    </description>
+	<tag>
+		<name>permission</name>
+		<tag-class>com.yu.store.sys.tag.PermissionTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>menuId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

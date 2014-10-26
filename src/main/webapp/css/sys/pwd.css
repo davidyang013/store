@@ -1,0 +1,51 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFF;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+/*最外层区域*/
+.main {
+	position: absolute;
+	width:100%;
+	margin: 0 auto;
+}
+
+/*中间大区域:*/
+.center{
+	width:100%;
+	text-align: left;
+	float:left;
+	font-size: 12px;
+	color: #295568;
+	margin-left:50px;
+}
+
+fieldset{
+	border:2px solid #0197BC;
+}
+
+.fieldTitle{
+	font-family: 微软雅黑;
+	font-size: 16px;
+	color: #0197BC
+}
+
+/*提示信息*/
+.info{
+	width:100%;
+	padding-left:0px;
+	padding-right:0px;
+	padding-bottom:0px;
+	color:red;
+	font-size:14px;
+}
+
+/*字体样式*/
+.font {
+	font-family: 黑体;
+	font-size: 14px;
+	color: #295568;
+}

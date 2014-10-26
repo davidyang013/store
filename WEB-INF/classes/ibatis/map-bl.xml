@@ -1,0 +1,1265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="bl">
+
+	
+	<!-- *************************************??????????????????****************************************** -->
+	<resultMap id="brandMap" class="com.yu.store.bl.vo.Brand">
+		<result property="serial" column="serial"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="warranty" column="warranty"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="comm" column="comm"/>
+	</resultMap>
+	
+	<select id="queryBrandMaxPage" parameterClass="com.yu.store.bl.vo.Brand" resultClass="java.lang.Integer">
+		select count(1) 
+		  from par_brand
+	  	where 1 = 1
+          <isNotEmpty prepend="and" property="serial">
+            serial = #serial#
+      	  </isNotEmpty>
+   	  	  <isNotEmpty prepend="and" property="brand">
+            brand = #brand#
+      	  </isNotEmpty>
+	</select>
+	
+	<select id="queryBrandAll" resultMap="brandMap" parameterClass="com.yu.store.bl.vo.Brand">
+		select * from
+		(
+			select a.*, rownum rn from
+				(select serial,
+					    brand,
+					    type,
+					    warranty,
+					    sale_price,
+					    comm
+			        from par_brand
+			      where 1 = 1
+		        	<isNotEmpty prepend="and" property="serial">
+		              serial = #serial#
+		        	</isNotEmpty>
+			    	<isNotEmpty prepend="and" property="brand">
+		              brand = #brand#
+		        	</isNotEmpty>
+		    		 order by serial
+		        	) a <![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="queryBrandDtl" resultMap="brandMap" parameterClass="java.lang.String">
+		select serial,
+			   brand,
+			   type,
+			   warranty,
+			   sale_price,
+			   comm
+	      from par_brand
+	    where serial = #serial#
+	</select>
+	
+	<insert id="insertBrand" parameterClass="com.yu.store.bl.vo.Brand">
+		insert into par_brand
+		  (serial, brand, type, warranty, sale_price, comm) 
+		values
+		  (#serial#, #brand#, #type#, #warranty#, #salePrice#, #comm:varchar#)
+	</insert>
+	
+	<update id="updateBrand" parameterClass="com.yu.store.bl.vo.Brand">
+		update par_brand set 
+		  brand = #brand#, type= #type#, warranty = #warranty#, sale_price = #salePrice#, comm = #comm:varchar# 
+		where serial = #serial# 
+	</update>
+	
+	<delete id="deleteBrand" parameterClass="java.lang.String">
+		delete from par_brand where serial = #serial#
+	</delete>
+	
+	<!-- ***********************************????????????******************************************** -->
+	<resultMap id="intoStoreMap" class="com.yu.store.bl.vo.IntoStore">
+		<result property="id" column="id"/>
+		<result property="serial" column="serial"/>
+		<result property="depSerial" column="dep_serial"/>
+		<result property="type" column="type"/>
+		<result property="supply" column="supply"/>
+		<result property="inDate" column="in_Date"/>
+		<result property="color" column="color"/>
+		<result property="count" column="count"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="purchasePrice" column="purchase_price"/>
+		<result property="isOut" column="is_out"/>
+		<result property="comm" column="comm"/>
+	</resultMap>
+	
+	<select id="queryIntoStoreMaxPage" parameterClass="com.yu.store.bl.vo.IntoStore" resultClass="java.lang.Integer">
+		select count(1) 
+		  from into_store ins, par_brand br
+        where ins.serial = br.serial(+)
+		  <isNotEmpty prepend="and" property="depSerial">
+             ins.dep_serial = #depSerial#
+       	  </isNotEmpty>
+          <isNotEmpty prepend="and" property="serial">
+             ins.serial = #serial#
+       	  </isNotEmpty>
+       	  <isNotEmpty prepend="and" property="type">
+             br.type = #type#
+       	  </isNotEmpty>
+    	  <isNotEmpty prepend="and" property="beginDate">
+    	    <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+             ]]> 
+       	  </isNotEmpty>
+       	  <isNotEmpty prepend="and" property="endDate">
+    	    <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+             ]]> 
+       	  </isNotEmpty>
+	</select>
+	
+	<select id="queryIntoStoreAll" resultMap="intoStoreMap" parameterClass="com.yu.store.bl.vo.IntoStore">
+		select * from
+		(
+			select a.*, rownum rn from
+				(select ins.id,
+			   			ins.serial,
+						ins.dep_serial,
+					    ins.supply,
+               		    br.type,
+					    ins.in_date,
+					    ins.color,
+					    ins.count,
+			   			br.sale_price,
+					    ins.purchase_price,
+					    ins.is_out,
+					    ins.comm
+			        from into_store ins, par_brand br
+                  where ins.serial = br.serial(+)
+		        	<isNotEmpty prepend="and" property="depSerial">
+		              ins.dep_serial = #depSerial#
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="serial">
+		              ins.serial = #serial#
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="type">
+		              br.type = #type#
+		       	  	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="supply">
+		              ins.supply = #supply#
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="color">
+		              ins.color = #color#
+		        	</isNotEmpty>
+			    	<isNotEmpty prepend="and" property="beginDate">
+			    	  <![CDATA[
+		              to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="endDate">
+			    	  <![CDATA[
+		              to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+           	 	     order by ins.in_date desc, ins.serial asc, ins.dep_serial asc
+		        ) a<![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<!-- ??????????????????????????? -->
+	<select id="queryIntoStoreByOut" resultMap="intoStoreMap" parameterClass="com.yu.store.bl.vo.IntoStore">
+		select ins.id,
+	   		   ins.serial,
+			   ins.dep_serial,
+			   ins.supply,
+               (select type from par_brand br where br.serial = ins.serial) type,
+			   substr(ins.in_date, 0, 10) in_date,
+			   ins.color,
+			   nvl(ins.count, 0) - nvl((select sum(nvl(os.count, 0)) from out_store os where ins.id = os.in_id),0) count,
+	   		   (select sale_price from par_brand br where br.serial = ins.serial) sale_price,
+			   ins.purchase_price,
+			   ins.is_out,
+			   ins.comm
+	        from into_store ins, par_brand br
+	      where ins.is_out != '1'
+	        and ins.serial = br.serial(+)
+	        <isNotEmpty prepend="and" property="id">
+              ins.id = #id#
+       	    </isNotEmpty>
+       	    <isNotEmpty prepend="and" property="depSerial">
+              ins.dep_serial = #depSerial#
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="serial">
+              ins.serial = #serial#
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="supply">
+              ins.supply = #supply#
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="color">
+              ins.color = #color#
+        	</isNotEmpty>
+	    	<isNotEmpty prepend="and" property="beginDate">
+	    	  <![CDATA[
+              to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+              ]]> 
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="endDate">
+	    	  <![CDATA[
+              to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+              ]]> 
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="type">
+              br.type = #type#
+        	</isNotEmpty>
+        	<isNotEmpty prepend="and" property="brand">
+              br.brand = #brand#
+        	</isNotEmpty>
+	</select>
+	
+	<select id="queryIntoStoreDtl" resultMap="intoStoreMap" parameterClass="java.lang.String">
+		select id,
+			   serial,
+			   dep_serial,
+			   '' type,
+			   supply,
+			   in_date,
+			   color,
+			   count,
+			   '' sale_price,
+			   purchase_price,
+			   is_out,
+			   comm
+	      from into_store ins
+	    where id = #id#
+	</select>
+	
+	<insert id="insertIntoStore" parameterClass="com.yu.store.bl.vo.IntoStore">
+		insert into into_store
+		  (dep_serial, serial, supply, in_date, color, count, purchase_price, comm) 
+		values
+		  (#depSerial:varchar#, #serial:varchar#, #supply#, to_char(sysdate,'YYYY-MM-DD hh24:mi'), #color#, #count#, #purchasePrice#, #comm:varchar#)
+	</insert>
+	
+	<update id="updateIntoStore" parameterClass="com.yu.store.bl.vo.IntoStore">
+		update into_store set 
+		  serial = #serial#, dep_serial = #depSerial#, supply= #supply#, color = #color#,
+		  count = #count#, purchase_price = #purchasePrice#, comm = #comm:varchar# 
+		where id = #id# 
+	</update>
+	
+	<delete id="deleteIntoStore" parameterClass="java.lang.String">
+		delete from into_store where id = #id#
+	</delete>
+	
+	<!-- **********************************????????????********************************************* -->
+	<resultMap id="outStoreMap" class="com.yu.store.bl.vo.OutStore">
+		<result property="id" column="id"/>
+		<result property="orderId" column="order_id"/>
+		<result property="inId" column="in_id"/>
+		<result property="price" column="price"/>
+		<result property="count" column="count"/>
+		<result property="outDate" column="out_date"/>
+		<result property="payType" column="pay_type"/>
+		<result property="buyType" column="buy_type"/>
+		<result property="transSerial" column="trans_serial"/>
+		<result property="transFee" column="trans_fee"/>
+		<result property="actualTransFee" column="actual_trans_fee"/>
+		<result property="transCompany" column="trans_company"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="warranty" column="warranty"/>
+		<result property="operator" column="operator"/>
+		<result property="comm" column="comm"/>
+	</resultMap>
+	
+	<select id="queryOutStoreMaxPage" parameterClass="com.yu.store.bl.vo.OutStore" resultClass="java.lang.Integer">
+		select count(1) 
+		  from 
+		  (
+		  	select order_id
+		  	  from out_store os, into_store ins, par_brand br
+			where ins.id = os.in_id
+              and ins.serial = br.serial
+	       	  <isNotEmpty prepend="and" property="orderId">
+	             os.order_id = #orderId#
+	       	  </isNotEmpty>
+        	  <isNotEmpty prepend="and" property="transSerial">
+	          	 os.trans_serial = #transSerial#
+	       	  </isNotEmpty>
+       	  	  <isNotEmpty prepend="and" property="type">
+		          br.type = #type#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="and" property="depSerial">
+			      ins.dep_serial = #depSerial#
+		      </isNotEmpty>
+	    	  <isNotEmpty prepend="and" property="beginDate">
+			    <![CDATA[
+		        to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		        ]]> 
+	          </isNotEmpty>
+	          <isNotEmpty prepend="and" property="endDate">
+	    	    <![CDATA[
+                to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+                ]]> 
+	          </isNotEmpty>
+	       	group by os.order_id
+	       )
+	</select>
+	
+	<select id="queryOutStoreAll" resultMap="outStoreMap" parameterClass="com.yu.store.bl.vo.OutStore">
+		select * from
+		(
+			select a.*, rownum rn from
+			(
+			 	select order_id,
+					   min(os.id) id,
+					   min(os.in_id) in_id,
+					   sum(os.price * os.count) price,
+					   sum(os.count) count,
+					   min(os.out_date) out_date,
+					   min(os.pay_type) pay_type,
+					   min(os.buy_type) buy_type,
+					   min(os.trans_serial) trans_serial,
+					   sum(nvl(os.trans_fee, 0) - nvl(os.actual_trans_fee, 0)) trans_fee,
+					   sum(nvl(os.actual_trans_fee, 0)) actual_trans_fee,
+					   min(os.trans_company) trans_company,
+					   min(os.sale_price) sale_price,
+					   min(os.warranty) warranty,
+					   min(os.operator) operator,
+					   min(os.comm) comm
+			        from out_store os, into_store ins, par_brand br
+			      where ins.id = os.in_id
+                    and ins.serial = br.serial
+			       	<isNotEmpty prepend="and" property="orderId">
+			          os.order_id = #orderId#
+			       	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="transSerial">
+			          os.trans_serial = #transSerial#
+			       	</isNotEmpty>
+			       	<isNotEmpty prepend="and" property="type">
+			          br.type = #type#
+			       	</isNotEmpty>
+			       	<isNotEmpty prepend="and" property="depSerial">
+			          ins.dep_serial = #depSerial#
+			       	</isNotEmpty>
+			       	<isNotEmpty prepend="and" property="beginDate">
+			    	  <![CDATA[
+		              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="endDate">
+			    	  <![CDATA[
+		              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		          group by os.order_id
+		          order by min(os.out_date) desc, os.order_id desc
+			 )a<![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="queryOutStoreDtl" resultMap="outStoreMap" parameterClass="com.yu.store.bl.vo.OutStore">
+		select order_id,
+			   id,
+			   in_id,
+			   price,
+			   count,
+			   out_date,
+			   pay_type,
+			   buy_type,
+			   trans_serial,
+			   trans_fee,
+			   actual_trans_fee,
+			   trans_company,
+			   sale_price,
+			   warranty,
+			   operator,
+			   comm
+	      from out_store
+	    where 1 = 1
+	      <isNotEmpty prepend="and" property="orderId">
+	    	order_id = #orderId#
+       	  </isNotEmpty>
+       	  <isNotEmpty prepend="and" property="id">
+	    	id = #id#
+       	  </isNotEmpty>
+       	   <isNotEmpty prepend="and" property="inId">
+	    	in_id = #inId#
+       	  </isNotEmpty>
+	</select>
+	
+	<select id="queryMaxOrderId" resultClass="java.lang.Integer">
+		select nvl(max(to_number(order_id)),to_char(sysdate,'YYMM') || '000')
+	      from out_store
+	</select>
+	
+	<select id="queryMaxOrderIdInMonth" resultClass="java.lang.Integer">
+		select nvl(max(to_number(order_id)), to_char(sysdate, 'YYMM') || '000')
+  		  from out_store
+  		where order_id like to_char(sysdate, 'YYMM') || '___'
+	</select>
+	
+	<insert id="insertOutStore" parameterClass="com.yu.store.bl.vo.OutStore">
+		insert into out_store
+		  (order_id, price, count, out_date, pay_type, buy_type, operator, trans_serial,
+		   trans_fee, trans_company, sale_price, warranty, in_id, comm, member_id) 
+		values
+		  (#orderId#, #price#, #count#, to_char(sysdate,'YYYY-MM-DD hh24:mi'), #payType#, #buyType#, #operator#, #transSerial#, 
+          #transFee#, #transCompany#, #salePrice#, #warranty#, #inId#, #comm:varchar#, #memberId#)
+	</insert>
+	
+	<update id="updateOutStore" parameterClass="com.yu.store.bl.vo.OutStore">
+		update out_store set 
+	    	price = #price#, count = #count#, pay_type = #payType#, buy_type = #buyType#, operator = #operator#, comm = #comm:varchar#
+		where order_id = #orderId#
+	</update>
+	
+	<update id="updateOutStoreOrder" parameterClass="com.yu.store.bl.vo.OutStore">
+		update out_store set 
+	    	trans_serial = #transSerial#, trans_fee = #transFee#, actual_trans_fee = #actualTransFee#, trans_company = #transCompany#
+		where id = #id#
+	</update>
+	
+	<update id="updateStatusOut" parameterClass="com.yu.store.bl.vo.OutStore">
+		update into_store set 
+		  is_out = #isOut#
+		where id = #inId# 
+	</update>
+	
+	<update id="updateMemberCredit" parameterClass="com.yu.store.bl.vo.OutStore">
+		update member_info set 
+		  credit = credit + #price#,operator = #operator#  
+		where id = #memberId# 
+	</update>
+	
+	<delete id="deleteOutStore" parameterClass="com.yu.store.bl.vo.OutStore">
+		delete from out_store where 1 = 1
+		  <isNotEmpty prepend="and" property="orderId">
+	    	order_id = #orderId#
+       	  </isNotEmpty>
+       	  <isNotEmpty prepend="and" property="id">
+	    	id = #id#
+       	  </isNotEmpty>
+	</delete>
+	
+	<!-- *************************************????????????****************************************** -->
+	<resultMap id="storageMap" class="com.yu.store.bl.vo.Storage">
+		<result property="serial" column="serial"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="inDate" column="in_Date"/>
+		<result property="color" column="color"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="count" column="count"/>
+	</resultMap>
+	
+	<select id="queryStorageMaxPage" parameterClass="com.yu.store.bl.vo.Storage" resultClass="java.lang.Integer">
+		select count(1) from 
+		(
+			select tmp.*, br.brand, br.type, br.sale_price from 
+			(
+			     select serial,
+						substr(in_date, 0, 10) in_date,
+					    color,
+					    sum(
+					    	nvl(ins.count, 0) - nvl((select sum(nvl(os.count, 0)) 
+					    	                           from out_store os 
+					    	                         where ins.id = os.in_id),0)
+					       ) count
+			        from into_store ins
+		          group by serial, 
+		          		   substr(in_date, 0, 10), 
+		          		   color
+			  ) tmp, par_brand br
+			  where tmp.serial = br.serial(+)
+	        	<isNotEmpty prepend="and" property="type">
+	              br.type = #type#
+	        	</isNotEmpty>
+	        	<isNotEmpty prepend="and" property="serial">
+	              br.serial = #serial#
+	        	</isNotEmpty>
+		    	<isNotEmpty prepend="and" property="beginDate">
+		    	  <![CDATA[
+	              to_date(substr(in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+	              ]]> 
+	        	</isNotEmpty>
+	        	<isNotEmpty prepend="and" property="endDate">
+		    	  <![CDATA[
+	              to_date(substr(in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+	              ]]> 
+	        	</isNotEmpty>
+	          order by tmp.serial asc, substr(tmp.in_date, 0, 10) asc, tmp.color asc
+		) 
+	</select>
+	
+	<select id="queryStorageAll" resultMap="storageMap" parameterClass="com.yu.store.bl.vo.Storage">
+		select * from
+		(
+			select a.*, rownum rn from
+			(
+				select tmp.*, br.brand, br.type, br.sale_price from 
+				(
+				     select serial,
+						    substr(in_date, 0, 10) in_date,
+						    color,
+						    sum(
+						    	nvl(ins.count, 0) - nvl((select sum(nvl(os.count, 0)) 
+						    	                           from out_store os 
+						    	                         where ins.id = os.in_id),0)
+						       ) count
+				        from into_store ins
+			          group by serial, 
+			          		   substr(in_date, 0, 10), 
+			          		   color
+				  ) tmp, par_brand br
+				  where tmp.serial = br.serial(+)
+		        	<isNotEmpty prepend="and" property="type">
+		              br.type = #type#
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="serial">
+	              	  br.serial = #serial#
+	        		</isNotEmpty>
+			    	<isNotEmpty prepend="and" property="beginDate">
+			    	  <![CDATA[
+		              to_date(substr(in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="endDate">
+			    	  <![CDATA[
+		              to_date(substr(in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+            		order by in_date desc, br.serial asc
+			 ) a <![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<resultMap id="storageEachMap" class="com.yu.store.bl.vo.Storage">
+		<result property="serial" column="serial"/>
+		<result property="depSerial" column="dep_serial"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="supply" column="supply"/>
+		<result property="warranty" column="warranty"/>
+		<result property="inDate" column="in_Date"/>
+		<result property="color" column="color"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="purchasePrice" column="purchase_price"/>
+		<result property="count" column="count"/>
+	</resultMap>
+	
+	<select id="queryStorageEachMaxPage" parameterClass="com.yu.store.bl.vo.Storage" resultClass="java.lang.Integer">
+		select count(1)
+          from into_store ins, out_store os, par_brand br
+        where ins.id = os.in_id(+)
+          and ins.count - nvl(os.count, 0) != 0
+          and ins.serial = br.serial(+)
+          <isNotEmpty prepend="and" property="serial">
+	        ins.serial = #serial#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="inDate">
+	        substr(ins.in_date, 0, 10) = #inDate#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="color">
+	        ins.color = #color#
+	      </isNotEmpty>
+	</select> 
+	
+	<select id="queryStorageEachAll" resultMap="storageEachMap" parameterClass="com.yu.store.bl.vo.Storage">
+		select * from
+		(
+	      select a.*, rownum rn from
+	      (
+	        select ins.id, ins.serial, ins.dep_serial, ins.in_date,
+	        	   ins.supply, ins.color, ins.purchase_price, ins.count - nvl(os.count, 0) count,
+	               br.brand, br.type, br.sale_price, br.warranty 
+	          from into_store ins, out_store os, par_brand br
+	        where ins.id = os.in_id(+)
+	          and ins.count - nvl(os.count, 0) != 0
+	          and ins.serial = br.serial(+)
+	          <isNotEmpty prepend="and" property="serial">
+		        ins.serial = #serial#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="and" property="inDate">
+		        substr(ins.in_date, 0, 10) = #inDate#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="and" property="color">
+		        ins.color = #color#
+		      </isNotEmpty>
+	          order by to_number(ins.id)
+	       ) a <![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="calcPrice" resultClass="java.lang.Double">
+       select sum(br.sale_price)
+		 from (select serial,
+		              sum(nvl(ins.count, 0) - nvl((select sum(nvl(os.count, 0))
+		                                             from out_store os
+		                                           where ins.id = os.in_id),
+		                                          0)) count
+		         from into_store ins
+		        where 1 = 1
+		    	  <isNotEmpty prepend="and" property="beginDate">
+		    	   <![CDATA[
+		             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		           ]]> 
+		       	  </isNotEmpty>
+		       	  <isNotEmpty prepend="and" property="endDate">
+		    	   <![CDATA[
+		             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+		           ]]>
+		          </isNotEmpty>
+		        group by serial, substr(in_date, 0, 10), color) tmp,
+		      par_brand br
+		 where tmp.serial = br.serial(+)
+		   <isNotEmpty prepend="and" property="type">
+              br.type = #type#
+      	   </isNotEmpty>
+      	   <isNotEmpty prepend="and" property="serial">
+              br.serial = #serial#
+     	   </isNotEmpty>
+	</select> 
+	
+	<select id="calcCount" resultClass="java.lang.Double">
+       select sum(ins.count - nvl(os.count, 0))
+         from into_store ins, out_store os, par_brand br
+       where ins.id = os.in_id(+)
+         and ins.count - nvl(os.count, 0) != 0
+         and ins.serial = br.serial(+)
+         <isNotEmpty prepend="and" property="type">
+             br.type = #type#
+       	 </isNotEmpty>
+       	 <isNotEmpty prepend="and" property="serial">
+             br.serial = #serial#
+      	 </isNotEmpty>
+    	 <isNotEmpty prepend="and" property="beginDate">
+    	  <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+          ]]> 
+       	 </isNotEmpty>
+       	 <isNotEmpty prepend="and" property="endDate">
+    	  <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+          ]]>
+         </isNotEmpty>
+	</select> 
+	
+	<select id="calcTotal" resultClass="java.lang.Double">
+	   select sum(br.sale_price * ( ins.count - nvl(os.count, 0)))
+         from into_store ins, out_store os, par_brand br
+       where ins.id = os.in_id(+)
+         and ins.count - nvl(os.count, 0) != 0
+         and ins.serial = br.serial(+)
+         <isNotEmpty prepend="and" property="type">
+             br.type = #type#
+       	 </isNotEmpty>
+       	 <isNotEmpty prepend="and" property="serial">
+             br.serial = #serial#
+      	 </isNotEmpty>
+    	 <isNotEmpty prepend="and" property="beginDate">
+    	  <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+          ]]> 
+       	 </isNotEmpty>
+       	 <isNotEmpty prepend="and" property="endDate">
+    	  <![CDATA[
+             to_date(substr(ins.in_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+          ]]>
+         </isNotEmpty>
+	</select> 
+	
+	<!-- *************************************????????????****************************************** -->
+	
+	<resultMap id="saleCre" class="com.yu.store.report.vo.SaleCre">
+		<result property="depSerial" column="dep_serial"/>
+		<result property="color" column="color"/>
+		<result property="salePrice" column="sale_price"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="warranty" column="warranty"/>
+	</resultMap>
+	
+	<select id="querySaleCre" resultMap="saleCre" parameterClass="java.lang.String">
+		select dep_serial,
+			   color, 
+			   nvl(sale_price, 0) sale_price, 
+			   brand,
+			   type, 
+			   warranty
+  		  from into_store ins, par_brand br
+		where ins.serial = br.serial(+)
+		  and id = #id#
+	</select>
+	
+	<resultMap id="memberId" class="java.lang.String">
+		<result property="memberId" column="member_id"/>
+	</resultMap>
+	
+	<select id="queryMemberId" resultClass="java.lang.String" parameterClass="java.lang.String">
+		select distinct(member_id) 
+  		  from out_store os ,member_info m 
+		where order_id = #orderId# 
+		  and m.id = os.member_id 
+	</select>
+	
+	<!-- ****************************************??????????????????*************************************** -->
+	<resultMap id="profit" class="com.yu.store.bl.vo.Profit">
+		<result property="month" column="month"/>
+		<result property="price" column="price"/>
+		<result property="purchasePrice" column="purchase_price"/>
+		<result property="transFee" column="trans_fee"/>
+		<result property="profit" column="profit"/>
+	</resultMap>
+	
+	<select id="queryProductProfit" resultMap="profit" parameterClass="com.yu.store.bl.vo.Profit">
+		select substr(out_date, 0,7) month,
+			   sum(os.price * os.count) price, 
+			   sum(ins.purchase_price * os.count) purchase_price, 
+			   sum(os.trans_fee) - sum(os.actual_trans_fee) trans_fee,
+			   sum(os.price * os.count) - sum(ins.purchase_price * os.count) + sum(os.trans_fee) - sum(os.actual_trans_fee) profit
+		  from out_store os, into_store ins 
+		where os.in_id = ins.id
+		group by substr(out_date, 0,7)
+		order by substr(out_date, 0,7) desc
+	</select>
+	
+	<resultMap id="profitOrder" class="com.yu.store.bl.vo.Profit">
+		<result property="orderId" column="order_id"/>
+		<result property="purchasePrice" column="purchase_price"/>
+		<result property="price" column="price"/>
+		<result property="transFee" column="trans_fee"/>
+		<result property="actualTransFee" column="actual_trans_fee"/>
+		<result property="profit" column="profit"/>
+	</resultMap>
+	
+	<select id="queryProductProfitOrderMaxPage" parameterClass="com.yu.store.bl.vo.Profit" resultClass="java.lang.Integer">
+		select count(1) from
+		(
+			select order_id,
+	       		   sum(purchase_price * os.count) purchase_price,
+	       		   sum(price * os.count) price,
+	       		   sum(nvl(trans_fee, 0)) trans_fee,
+             	   sum(nvl(actual_trans_fee, 0)) actual_trans_fee,
+			   	   sum(os.price * os.count) - sum(ins.purchase_price * os.count) + sum(os.trans_fee) - sum(os.actual_trans_fee) profit
+		      from out_store os, into_store ins
+		    where os.in_id = ins.id
+	       	<isNotEmpty prepend="and" property="orderId">
+	          order_id = #orderId#
+	       	</isNotEmpty>
+	       	<isNotEmpty prepend="and" property="beginDate">
+	    	  <![CDATA[
+	          to_date(substr(out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+	          ]]> 
+	       	</isNotEmpty>
+	       	<isNotEmpty prepend="and" property="endDate">
+	    	  <![CDATA[
+	             to_date(substr(out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+	             ]]> 
+	       	</isNotEmpty>
+	        group by order_id
+	        order by order_id desc
+        )
+	</select>
+	
+	<select id="queryProductProfitOrder" resultMap="profitOrder" parameterClass="com.yu.store.bl.vo.Profit">
+		select * from
+		(
+			select a.*, rownum rn from
+			(
+			 	select order_id,
+             		   sum(purchase_price * os.count) purchase_price,
+             		   sum(price * os.count) price,
+             		   sum(nvl(trans_fee, 0)) trans_fee,
+             		   sum(nvl(actual_trans_fee, 0)) actual_trans_fee,
+			   		   sum(os.price * os.count) - sum(ins.purchase_price * os.count) + sum(os.trans_fee) - sum(os.actual_trans_fee) profit
+                  from out_store os, into_store ins
+			      where os.in_id = ins.id
+			       	<isNotEmpty prepend="and" property="orderId">
+			          order_id = #orderId#
+			       	 </isNotEmpty>
+			       	 <isNotEmpty prepend="and" property="beginDate">
+			    	  <![CDATA[
+		              to_date(substr(out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') >= to_date(#beginDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="endDate">
+			    	  <![CDATA[
+		              to_date(substr(out_date, 0, 10), 'yyyy-mm-dd hh24:mi:ss') <= to_date(#endDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		          group by order_id
+		          order by order_id desc
+			 )a<![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<!-- *************************************??????????????????****************************************** -->
+	<resultMap id="memberMap" class="com.yu.store.bl.vo.Member">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="birthday" column="birthday"/>
+		<result property="phone" column="phone"/>
+		<result property="credit" column="credit"/>
+		<result property="vipType" column="vip_type"/>
+	</resultMap>
+	
+	<select id="queryMemberDtl" resultMap="memberMap" parameterClass="java.lang.String">
+		select m.id,
+			   c.name,
+			   c.birthday,
+			   c.phone,
+			   m.credit,
+			   m.vip_type 
+		from customer_info c
+		left join member_info m
+			   on m.id = c.member_Id
+	    where m.id = #id#
+	</select>
+	
+	<insert id="insertMember" parameterClass="com.yu.store.bl.vo.Member">
+		insert into member_info 
+		  (id, vip_type, operator, establish_date) 
+		values 
+		  (#id#, #vipType#, #operator#, to_char(sysdate,'YYYY-MM-DD hh24:mi'))
+	</insert>
+
+	<insert id="insertCustomer" parameterClass="com.yu.store.bl.vo.Member">
+	<selectKey resultClass="java.lang.String" keyProperty="customerId">  
+		SELECT STORAGE_SEQ.Nextval AS customerId FROM DUAL 
+	</selectKey> 
+		insert into customer_info 
+		  (id, name, birthday, phone, operator, establish_date,member_Id) 
+		values 
+		  (#customerId#, #name#, #birthday#, #phone#, #operator#, to_char(sysdate,'YYYY-MM-DD hh24:mi'),#id#)
+	</insert>
+	
+	<update id="updateCustomer" parameterClass="com.yu.store.bl.vo.Member">
+		update customer_info set 
+		  birthday = #birthday#, phone= #phone# ,operator= #operator# ,establish_date=to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+		where member_id = ( select id  
+					 from member_info 
+					 where id = #id# )
+	</update>
+	
+	<update id="updateMember" parameterClass="com.yu.store.bl.vo.Member">
+		update member_info set 
+		  vip_type= #vipType# ,operator= #operator# ,establish_date=to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+		where id = #id# 
+	</update>
+	
+	<select id="queryOutStoreByMember" resultMap="memberMap" parameterClass="java.lang.String">
+		select m.id,
+			   c.name,
+			   c.birthday,
+			   c.phone,
+			   m.credit,
+			   m.vip_type 
+		from member_info m, customer_info c, out_store os 
+	    where os.member_id = #id#
+	      and m.id = c.member_Id
+	      and os.member_id = m.id
+	</select>
+	
+	<select id="queryRepairByMember" resultMap="memberMap" parameterClass="java.lang.String">
+		select m.id, 
+			   c.name, 
+			   c.birthday, 
+			   c.phone, 
+			   m.credit, 
+			   m.vip_type
+  		from member_info m, customer_info c, repair_info r
+ 		where m.id = #id#
+   		  and m.id = c.member_Id
+   		  and r.customer_id= c.id
+	</select>
+	
+	<resultMap id="memberOutStoreMap" class="com.yu.store.bl.vo.Member">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="birthday" column="birthday"/>
+		<result property="phone" column="phone"/>
+		<result property="credit" column="credit"/>
+		<result property="vipType" column="vip_type"/>
+		<result property="price" column="price"/>
+		<result property="outDate" column="out_date"/>
+	</resultMap>
+	
+	<select id="queryMemberMaxPage" parameterClass="com.yu.store.bl.vo.Member" resultClass="java.lang.Integer">
+		select count(1) 
+		  from member_info m 
+		  left join out_store os 
+			on m.id = os.member_id , customer_info c 
+		  where m.id = c.member_Id
+			  <isNotEmpty prepend="and" property="id">
+            	m.id = #id# 
+      	  	  </isNotEmpty>
+   	  	  	  <isNotEmpty prepend="and" property="phone">
+            	c.phone = #phone# 
+      	      </isNotEmpty>
+	</select>
+	
+	<select id="queryMemberAll" resultMap="memberOutStoreMap" parameterClass="com.yu.store.bl.vo.Member">
+		select * from 
+		(
+			select a.*, rownum rn from 
+				(select m.id,
+					    c.name,
+					    c.birthday,
+					    c.phone,
+					    m.credit,
+					    m.vip_type, 
+					    os.price, 
+					    os.out_date 
+			        from member_info m
+			        left join out_store os 
+					  on m.id=os.member_id , customer_info c 
+					where m.id = c.member_Id
+						<isNotEmpty prepend="and" property="id">
+            			  m.id = #id# 
+      	  	  			</isNotEmpty>
+   	  	  	  			<isNotEmpty prepend="and" property="phone">
+            			  c.phone = #phone# 
+      	      			</isNotEmpty>
+		    		 order by id 
+		        	) a <![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<delete id="deleteMember" parameterClass="java.lang.String">
+		delete from member_info where id = #id#
+	</delete>
+	
+	<!-- *************************************??????????????????****************************************** -->
+	<resultMap id="repairMap" class="com.yu.store.bl.vo.Repair">
+		<result property="id" column="id"/>
+		<result property="orderId" column="order_id"/>
+		<result property="price" column="price"/>
+		<result property="actualPrice" column="actual_price"/>
+		<result property="repairStatus" column="repair_status"/>
+		<result property="customerId" column="customer_id"/>
+		<result property="repairSerialA" column="repair_seriala"/>
+		<result property="repairFeeA" column="repair_feea"/>
+		<result property="repairSerialB" column="repair_serialb"/>
+		<result property="repairFeeB" column="repair_feeb"/>
+		<result property="repairSerialC" column="repair_serialc"/>
+		<result property="repairFeeC" column="repair_feec"/>
+		<result property="repairSerialD" column="repair_seriald"/>
+		<result property="repairFeeD" column="repair_feed"/>
+		<result property="actualRepairFee" column="actual_repair_fee"/>
+		<result property="purchaseDate" column="purchase_date"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="color" column="color"/>
+		<result property="headsetSerial" column="headset_serial"/>
+		<result property="appearance" column="appearance"/>
+		<result property="name" column="name"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="wangwangId" column="wangwang_id"/>
+		<result property="repairFeeABCD" column="repairFeeABCD"/>
+	</resultMap>
+	
+	<select id="queryRepairMaxPage" parameterClass="com.yu.store.bl.vo.Repair" resultClass="java.lang.Integer">
+		select count(1) 
+		  from repair_info r,customer_info c 
+		  where r.customer_id = c.id 
+			  <isNotEmpty prepend="and" property="id">
+            	r.id = #id# 
+      	  	  </isNotEmpty>
+   	  	  	  <isNotEmpty prepend="and" property="phone">
+            	c.phone = #phone# 
+      	      </isNotEmpty>
+	</select>
+	
+	<select id="queryRepairAll" resultMap="repairMap" parameterClass="com.yu.store.bl.vo.Repair">
+		select * from 
+		(
+			select a.*, rownum rn from 
+				(select r.id,
+ 						r.order_id,
+  						r.price,
+  						r.actual_price,
+  						r.repair_status,
+					  	r.customer_id,
+					  	r.repair_seriala,
+					  	r.repair_feea,
+					  	r.repair_serialb,
+					  	r.repair_feeb,
+					  	r.repair_serialc,
+					  	r.repair_feec,
+					  	r.repair_seriald,
+					  	r.repair_feed,
+					  	r.actual_repair_fee,
+					  	r.purchase_date,
+					 	r.brand,
+					  	r.type,
+					  	r.color,
+					  	r.headset_serial,
+					  	r.appearance,
+					  	c.name,
+					  	c.phone,
+					  	c.address,
+					  	c.wangwang_id,
+					  	r.repair_feea+r.repair_feeb+r.repair_feec+r.repair_feed repairFeeABCD 
+			        from repair_info r,customer_info c 
+					where r.customer_id = c.id 
+		    		 order by r.id 
+		        	) a <![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<select id="queryRepairDtl" resultMap="repairMap" parameterClass="java.lang.String">
+		select r.id,
+			   r.order_id,
+			   r.price,
+			   r.actual_price,
+			   r.repair_status,
+	  		   r.customer_id,
+	  		   r.repair_seriala,
+	  		   r.repair_feea,
+	  	 	   r.repair_serialb,
+	  		   r.repair_feeb,
+	  		   r.repair_serialc,
+	  		   r.repair_feec,
+	  		   r.repair_seriald,
+	  		   r.repair_feed,
+	  		   r.actual_repair_fee,
+	  		   r.purchase_date,
+	 		   r.brand,
+	  		   r.type,
+	  		   r.color,
+	  		   r.headset_serial,
+	  		   r.appearance,
+	  		   c.name,
+	  		   c.phone,
+	  		   c.address,
+	  		   c.wangwang_id,
+	  		   r.repair_feea+r.repair_feeb+r.repair_feec+r.repair_feed repairFeeABCD 
+		from repair_info r,customer_info c 
+	    where r.id = #id#
+	      and r.customer_id = c.id 
+	</select>
+	
+	<delete id="deleteRepair" parameterClass="java.lang.String">
+		delete from repair_info where id = #id#
+	</delete>
+	
+	<resultMap id="repairCustomerMap" class="com.yu.store.bl.vo.Repair">
+		<result property="customerId" column="id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="name" column="name"/>
+		<result property="address" column="address"/>
+		<result property="phone" column="phone"/>
+		<result property="wangwangId" column="wangwang_id"/>
+	</resultMap>
+	
+	<select id="searchCustomerInfoMaxPage" resultClass="java.lang.Integer" parameterClass="com.yu.store.bl.vo.Repair">
+		select count(1) 
+		  from 
+		  (
+		    select  c.id,
+					c.member_id,
+				    c.name,
+				    c.address,
+				    c.phone,
+				    c.wangwang_id 
+		        from customer_info c 
+           		left join member_info m
+					on m.id = c.member_Id
+				where 1 = 1
+					<isNotEmpty prepend="and" property="memberId">
+	          			  c.member_id = #memberId# 
+	    	  	  	</isNotEmpty>
+	 	  	  	  	<isNotEmpty prepend="and" property="name">
+	          			  c.name = #name# 
+	    	      	</isNotEmpty>
+	    	      	<isNotEmpty prepend="and" property="customerId">
+	          			  c.id = #customerId# 
+	    	      	</isNotEmpty>
+        	)
+	</select>
+	
+	<select id="searchCustomerInfo" resultMap="repairCustomerMap" parameterClass="com.yu.store.bl.vo.Repair">
+			select * from
+			(
+				select a.*, rownum rn from
+				(
+					select  c.id,
+							c.member_id,
+						    c.name,
+						    c.address,
+						    c.phone,
+						    c.wangwang_id 
+				        from customer_info c 
+		           		left join member_info m
+							on m.id = c.member_Id
+						where 1 = 1
+							<isNotEmpty prepend="and" property="memberId">
+			          			  c.member_id = #memberId# 
+			    	  	  	</isNotEmpty>
+			 	  	  	  	<isNotEmpty prepend="and" property="name">
+			          			  c.name = #name# 
+			    	      	</isNotEmpty>
+			    	      	<isNotEmpty prepend="and" property="customerId">
+			          			  c.id = #customerId# 
+			    	      	</isNotEmpty>
+			    		 order by c.member_id 
+			         )a<![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<resultMap id="repairBrandMap" class="com.yu.store.bl.vo.Repair">
+		<result property="headsetSerial" column="dep_serial"/>
+		<result property="purchaseDate" column="purchaseDate"/>
+		<result property="orderId" column="order_id"/>
+		<result property="brand" column="brand"/>
+		<result property="type" column="type"/>
+		<result property="color" column="color"/>
+		<result property="appearance" column="appearance"/>
+		<result property="warranty" column="warranty"/>
+	</resultMap>
+	
+	<select id="searchBrandInfoMaxPage" resultClass="java.lang.Integer" parameterClass="com.yu.store.bl.vo.Repair">
+		select count(1) 
+		  from 
+		  (
+		    select ins.dep_serial, 
+				   substr(os.out_date, 0 , 10) purchaseDate,
+		  		   os.order_id, 
+		 		   b.brand, 
+		  		   b.type, 
+		  		   ins.color, 
+		  		   '' appearance, 
+		  		   b.warranty
+			from into_store ins,par_brand b,out_store os 
+	      	where ins.serial=b.serial 
+	        	and os.in_id=ins.id 
+	   			<isNotEmpty prepend="and" property="orderId">
+	      			  os.order_id = #orderId# 
+		  	  	</isNotEmpty>
+		  	  	<isNotEmpty prepend="and" property="type">
+	      			  b.type = #type# 
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="and" property="beginDate">
+		    	  <![CDATA[
+	              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd') >= to_date(#beginDate#,'yyyy-mm-dd')
+	              ]]> 
+	        	</isNotEmpty>
+	        	<isNotEmpty prepend="and" property="endDate">
+		    	  <![CDATA[
+	              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd') <= to_date(#endDate#,'yyyy-mm-dd')
+	              ]]> 
+	        	</isNotEmpty>
+        	)
+	</select>
+	
+	<select id="searchBrandInfo" resultMap="repairBrandMap" parameterClass="com.yu.store.bl.vo.Repair">
+		select * from
+		(
+			select a.*, rownum rn from
+			(
+			    select ins.dep_serial, 
+					   substr(os.out_date, 0 , 10) purchaseDate,
+			  		   os.order_id, 
+			 		   b.brand, 
+			  		   b.type, 
+			  		   ins.color, 
+			  		   '' appearance, 
+			  		   b.warranty
+				from into_store ins,par_brand b,out_store os 
+		      	where ins.serial=b.serial 
+		        	and os.in_id=ins.id 
+		   			<isNotEmpty prepend="and" property="orderId">
+		      			  os.order_id = #orderId# 
+			  	  	</isNotEmpty>
+			  	  	<isNotEmpty prepend="and" property="type">
+		      			  b.type = #type# 
+			      	</isNotEmpty>
+			      	<isNotEmpty prepend="and" property="beginDate">
+			    	  <![CDATA[
+		              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd') >= to_date(#beginDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="and" property="endDate">
+			    	  <![CDATA[
+		              to_date(substr(os.out_date, 0, 10), 'yyyy-mm-dd') <= to_date(#endDate#,'yyyy-mm-dd')
+		              ]]> 
+		        	</isNotEmpty> 
+	        	order by os.order_id desc
+	         )a<![CDATA[
+			 where rownum <= #pageSize# * #curPage# ]]> 
+		) where rn > #pageSize# * (#curPage# - 1)
+	</select>
+	
+	<insert id="insertCustomerRepair" parameterClass="com.yu.store.bl.vo.Repair">
+	<selectKey resultClass="java.lang.String" keyProperty="customerId">  
+		SELECT STORAGE_SEQ.Nextval AS customerId FROM DUAL 
+	</selectKey> 
+		insert into customer_info 
+		  (id, name, wangwang_id, PHONE, ADDRESS, operator, establish_date) 
+		values 
+		  (#customerId#,#name#, #wangwangId#, #phone#, #address#, #operator#, to_char(sysdate,'YYYY-MM-DD hh24:mi'))
+	</insert>
+	<update id="updateCustomerRepair" parameterClass="com.yu.store.bl.vo.Repair">
+		update customer_info set 
+		  name = #name#, phone= #phone# ,wangwang_id = #wangwangId#, address= #address# ,operator= #operator# ,
+		  establish_date=to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+		where id = #customerId# 
+	</update>
+	<insert id="insertRepair" parameterClass="com.yu.store.bl.vo.Repair">
+		insert into repair_info 
+		  (order_id, price, actual_price, repair_seriala, repair_feea, repair_status, customer_id, purchase_date, brand, type, 
+		  color, headset_serial, appearance, operator, establish_date) 
+		values 
+		  (#orderId#, #price#, #actualPrice#, #repairSerialA#, #repairFeeA#, #repairStatus#, #customerId#, #purchaseDate#, #brand#, #type#,
+		   #color#, #headsetSerial#, #appearance#, #operator#, to_char(sysdate,'YYYY-MM-DD hh24:mi'))
+	</insert>
+	<update id="updateRepair" parameterClass="com.yu.store.bl.vo.Repair">
+		update repair_info set 
+		  order_id = #orderId#, price= #price# ,actual_price = #actualPrice#, repair_status = #repairStatus# ,
+		  customer_id = #customerId#, purchase_date= #purchaseDate# ,brand = #brand#, type = #type# ,
+		  color = #color#, headset_serial= #headsetSerial# ,appearance = #appearance#,
+		  operator = #operator# ,establish_date = to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+		where id = #id# 
+	</update>
+	<update id="updateTransFee" parameterClass="com.yu.store.bl.vo.Repair">
+		<isEqual property="repairStatus" compareValue="???????????????"> 
+		 update repair_info set 
+			  repair_serialb = #repairSerialX# , repair_feeb = #repairFeeX# , REPAIR_STATUS = '???????????????' , operator= #operator# ,
+			  establish_date = to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+			where id = #id# 
+		</isEqual>  
+		<isEqual property="repairStatus" compareValue="???????????????"> 
+		 update repair_info set 
+			  repair_serialc = #repairSerialX# , repair_feec = #repairFeeX# , REPAIR_STATUS = '???????????????' , operator = #operator# ,
+			  establish_date = to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+			where id = #id# 
+		</isEqual>  
+		<isEqual property="repairStatus" compareValue="???????????????"> 
+		 update repair_info set 
+			  repair_seriald = #repairSerialX# , repair_feed = #repairFeeX# , REPAIR_STATUS = '???????????????' , operator = #operator# ,
+			  establish_date = to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+			where id = #id# 
+		</isEqual>  
+		<isEqual property="repairStatus" compareValue="update"> 
+		 update repair_info set 
+		 	  repair_seriala = #repairSerialA# , repair_feea = #repairFeeA# , 
+		 	  repair_serialb = #repairSerialB# , repair_feeb = #repairFeeB# , 
+		 	  repair_serialc = #repairSerialC# , repair_feec = #repairFeeC# , 
+		 	  repair_seriald = #repairSerialD# , repair_feed = #repairFeeD# , 
+			  actual_repair_fee = #actualRepairFee# ,operator = #operator# ,
+			  establish_date = to_char(sysdate,'YYYY-MM-DD hh24:mi') 
+			where id = #id# 
+		</isEqual>  
+	</update>
+</sqlMap>

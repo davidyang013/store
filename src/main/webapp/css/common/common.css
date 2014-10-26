@@ -1,0 +1,244 @@
+html{   
+	SCROLLBAR-FACE-COLOR: #eeeeee;
+	SCROLLBAR-HIGHLIGHT-COLOR: #eeeeee;
+	SCROLLBAR-SHADOW-COLOR: #eeeeee;
+	SCROLLBAR-3DLIGHT-COLOR: #666666;
+	SCROLLBAR-ARROW-COLOR: #666666;
+	SCROLLBAR-TRACK-COLOR: #eeeeee;
+	SCROLLBAR-DARKSHADOW-COLOR: #666666;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFFFFF;
+	font-family: 宋体;
+}
+
+/*中间大区域:包括info、show*/
+.center {
+	width: 100%;
+	text-align: left;
+	font-size: 12px;
+	color: #295568;
+	margin-left: 25px;
+	margin-top: 25px;
+}
+
+.fieldTitle {
+	font-family: 微软雅黑;
+	font-size: 16px;
+	color: #0197BC
+}
+
+/*提示信息*/
+.info {
+	width: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-top: 20px;
+	color: red;
+	font-size: 14px;
+}
+
+.scroll {
+	overflow-x: auto;
+	width: 100%;
+}
+
+/*show区域 里面为主要信息(table)显示*/
+.show {
+	width: 100%;
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+/*信息列表显示*/
+.show table {
+	font-size: 12px;
+	width: 100%;
+	color: #295568;
+	border-right: 1px #A8C7CE solid;
+}
+
+/*表头行样式*/
+.show th {
+	background-image: url(../../images/trTitle.gif);
+	height:25px;
+	border-bottom: 0px #A8C7CE solid;
+	color: #ffffff;
+	white-space: nowrap;
+}
+
+/*列样式*/
+.show .tblMain td {
+	border-bottom: 1px #A8C7CE solid;
+	border-left: 1px #A8C7CE solid;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	text-align: center;
+	height: 20px;
+	white-space: nowrap;
+
+}
+
+/*列样式*/
+.show .tblPage td {
+	border-top: 1px #A8C7CE solid;
+	border-bottom: 1px #A8C7CE solid;
+	border-left: 1px #A8C7CE solid;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.trFoot {
+	FONT-SIZE: 13px;
+	font-family: "宋体", "Verdana", "Arial";
+	BACKGROUND-COLOR: #e7edf3;
+	height: 25;
+}
+
+/*奇数行样式*/
+.trOdd{
+	background-color:#FFFFFF;
+}
+
+/*偶数行样式*/
+.trEven{
+	background-color:#EEEEEE;
+}
+
+/*编辑页面的table样式*/
+table.editTable {
+	border: 1px #E0F1FF solid;
+	cellspacing: 1;
+	cellpadding: 0;
+}
+
+/*================================================*/
+/*  设定Table的题目的属性 */
+/*================================================*/
+.trTitle {
+	FONT-SIZE: 13px;
+	font-family: "宋体", "Verdana", "Arial";
+	background-image: url(../../images/dwth.gif);
+	COLOR: #000000;
+	height: 25px;
+	font-weight: bold;
+	Text-align: center;
+}
+
+/*================================================*/
+/*  设定中间位置tr的属性*/
+/*================================================*/
+.trMid {
+	font-family: "宋体";
+	color: #000000;
+	background-color: #e7edf3;
+	font-size: 13px;
+	height: 25
+}
+
+/* 表中只读输入域 */
+.readOnly {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体";
+	color: #000000;
+	BACKGROUND-COLOR: #CCDEF4;
+}
+
+/* 编辑页面table 输入域，选择框，TextArea等（与Label对象的控件） */
+.tdInput {
+	align: right; font-family : "宋体";
+	font-size: 13px;
+	color: #000000;
+	background-color: #e7edf3;
+	font-family: "宋体";
+}
+
+/*编辑页面table Label的样式*/
+.tdLabel {
+	Text-align: right;
+	FONT-SIZE: 13px;
+	font-family: "宋体";
+	background-color: #e7edf3;
+}
+
+/*编辑页面table与Label 所在td对应td显示文本的样式，显示数据table中 文本列的样式*/
+.tdText {
+	font-family: "宋体";
+	font-size: 13px;
+	color: #000000;
+	background-color: #efefef;
+}
+/*编辑页面table与Label 所在td对应td显示数字的样式，显示数据table中数字列的样式*/
+.tdNumber {
+	Text-align: right;
+	font-family: "宋体";
+	FONT-SIZE: 13px;
+	background-color: #efefef;
+}
+
+/*字体样式*/
+.font {
+	font-size: 12px;
+	color: #295568;
+}
+
+.btn {
+	cursor: hand;
+	background-image: url(../../images/buttondw.gif);
+	border-style: none;
+	width: 60px;
+	height: 20px
+}
+
+/*文本框样式*/
+text {
+	width: 100px;
+	border: 1px solid #0197BC;
+	background-color: #FFFFFF;
+}
+
+/*组合框样式*/
+select {
+	width: 152px;
+	background-color: #FFFFFF;
+}
+
+fieldset {
+	border: 2px solid #0197FF;
+}
+
+img{
+	border:0px;
+}
+
+/*底部区域*/
+.bottom {
+	margin-top: 10px;
+}
+
+.a {
+	color: #295568;
+}
+
+a:active {
+	color: #295568;
+}
+
+a:hover {
+	color: #295568;
+}
+
+a:link {
+	color: #295568;
+}
+a:visited{
+	color: #295568;
+}

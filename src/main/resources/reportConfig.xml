@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<reports>
+	<!-- update -->
+	<report id="1"
+	        name="销售凭证" 
+			program="1"
+			order="2" 
+			startRow="1" 
+			startCol="1" 
+			procName="com.yu.store.report.bo.SaleCreBO"   
+			operation="1" 
+			modelName="../../model/SaleCre.xls" 
+			sheet="0"/>
+
+</reports>

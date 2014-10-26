@@ -1,0 +1,352 @@
+/*================================================*/
+/*   设定主页面的一些属性     */
+/*================================================*/
+BODY {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体", "Verdana";
+	/*BACKGROUND-COLOR: #f0f0f0;*/
+	MARGIN: 0;
+}
+BODY {
+	SCROLLBAR-FACE-COLOR: #eeeeee;
+	SCROLLBAR-HIGHLIGHT-COLOR: #eeeeee;
+	SCROLLBAR-SHADOW-COLOR: #eeeeee;
+	SCROLLBAR-3DLIGHT-COLOR: #666666;
+	SCROLLBAR-ARROW-COLOR: #666666;
+	SCROLLBAR-TRACK-COLOR: #eeeeee;
+	SCROLLBAR-DARKSHADOW-COLOR: #666666;
+}
+
+SPAN {
+	border: 1px;
+	solid: black;
+	overflow: hidden;
+}
+
+/*================================================*/
+/*  设定FORM的属性 */
+/*================================================*/
+BUTTON {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体", "Verdana";
+}
+
+INPUT {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体", "Verdana";
+	color: #000000;
+	BACKGROUND-COLOR: #E9EFF5;
+}
+
+SELECT {
+	margin: -2px;
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体", "Verdana";
+	BACKGROUND-COLOR: #E9EFF5;
+	/*HEIGHT:17px;*/
+}
+
+TEXTAREA {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体", "Verdana";
+}
+
+TEXTAREA {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	BORDER-LEFT: 1px solid;
+	BORDER-BOTTOM: 1px solid;
+	COLOR: #000000;
+	BACKGROUND-COLOR: #E9EFF5
+}
+
+TEXTAREA {
+	SCROLLBAR-FACE-COLOR: #AACEF7;
+	SCROLLBAR-HIGHLIGHT-COLOR: #AACEF7;
+	SCROLLBAR-SHADOW-COLOR: #0054A6;
+	SCROLLBAR-ARROW-COLOR: #0054A6;
+	SCROLLBAR-TRACK-COLOR: #CCDEF4;
+	SCROLLBAR-DARKSHADOW-COLOR: #CCDEF4;
+	SCROLLBAR-BASE-COLOR: #CCDEF4;
+}
+
+/*================================================*/
+/*  设定Table的属性 */
+/*================================================*/
+TABLE {
+	FONT-SIZE: 13px;
+}
+
+TR {
+	FONT-SIZE: 13px;
+}
+
+TD {
+	FONT-SIZE: 13px;
+}
+
+/*编辑页面的table样式*/
+table.Table {
+	border: 1px #E0F1FF solid;
+	cellspacing: 1;
+	cellpadding: 0;
+}
+
+th.Head {
+	height: 27px;
+	cursor: hand;
+	background-image: url(../../images/trTitle.gif)
+}
+/*================================================*/
+/*  设定标题的属性 */
+/*================================================*/
+.Title {
+	FONT-SIZE: 13px;
+	font-family: "宋体", "Verdana", "Arial";
+	background-image: url(../../images/dwth.gif);
+	COLOR: #000000;
+	height: 25px;
+	line-height: 25px;
+	font-weight: bold;
+	Text-align: center;
+}
+/*================================================*/
+/*  设定Table的题目的属性 */
+/*================================================*/
+.TrTitle {
+	FONT-SIZE: 13px;
+	font-family: "宋体", "Verdana", "Arial";
+	background-image: url(../../images/dwth.gif);
+	COLOR: #000000;
+	height: 25px;
+	font-weight: bold;
+	Text-align: center;
+}
+/*================================================*/
+/*  设定Table的下脚的属性 */
+/*================================================*/
+.TrFoot {
+	FONT-SIZE: 13px;
+	font-family: "宋体", "Verdana", "Arial";
+	BACKGROUND-COLOR: #e7edf3;
+	COLOR: #FFFFFF;
+	height: 25;
+	Text-align: center;
+}
+/*================================================*/
+/*  设定Table偶数行的属性 */
+/*================================================*/
+.TrOdd {
+	font-family: "宋体";
+	font-size: 9pt;
+	font-weight: normal;
+	color: #000000;
+	background-color: #EEEEEE;
+}
+/*================================================*/
+/*  设定Table奇数行的属性*/
+/*================================================*/
+.TrEven {
+	font-family: "宋体";
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 9pt;
+	font-weight: normal;
+}
+/*================================================*/
+/*  设定中间位置tr的属性*/
+/*================================================*/
+.TrMid {
+	font-family: "宋体";
+	color: #000000;
+	background-color: #e7edf3;
+	font-size: 13px;
+	height: 25
+}
+
+/* 表中只读输入域 */
+.ReadOnly {
+	FONT-SIZE: 13px;
+	FONT-FAMILY: "宋体";
+	color: #000000;
+	BACKGROUND-COLOR: #CCDEF4;
+}
+
+/* 编辑页面table 输入域，选择框，TextArea等（与Label对象的控件） */
+.TdInput {
+	align: right; font-family : "宋体";
+	font-size: 13px;
+	color: #000000;
+	background-color: #e7edf3;
+	font-family: "宋体";
+}
+
+/*编辑页面table Label的样式*/
+.TdLabel {
+	Text-align: right;
+	FONT-SIZE: 13px;
+	font-family: "宋体";
+	background-color: #e7edf3;
+}
+
+/*编辑页面table与Label 所在td对应td显示文本的样式，显示数据table中 文本列的样式*/
+.TdText {
+	font-family: "宋体";
+	font-size: 13px;
+	color: #000000;
+	background-color: #efefef;
+}
+/*编辑页面table与Label 所在td对应td显示数字的样式，显示数据table中数字列的样式*/
+.TdNumber {
+	Text-align: right;
+	font-family: "宋体";
+	FONT-SIZE: 13px;
+	background-color: #efefef;
+}
+
+/*功能按钮样式*/
+.BTN {
+	cursor: hand;
+	background-image: url(../../images/buttondw.gif);
+	border-style: none;
+	width: 60px;
+	height: 20px
+}
+
+.BTN1 {
+	cursor: hand;
+	background-image: url(../../images/buttondw1.gif);
+	border-style: none;
+	width: 40px;
+	height: 20px
+}
+/*助手按钮样式*/
+.AssisBTN {
+	cursor: hand;
+	background-image: url(../../images/buttondw.gif);
+	border-style: none;
+	width: 60px;
+	height: 20px
+}
+
+/*大按钮样式*/
+.BIGBTN {
+	cursor: hand;
+	background-image: url(../../images/button.gif);
+	border-style: none;
+	width: 74px;
+	height: 20px
+}
+/*大按钮样式*/
+.SUPERBIGBTN {
+	cursor: hand;
+	background-image: url(../../images/bigButton.gif);
+	border-style: none;
+	width: 90px;
+	height: 20px
+}
+/*超大按钮样式*/
+.GREATBTN {
+	cursor: hand;
+	background-image: url(../../images/superBigButton.gif);
+	border-style: none;
+	width: 130px;
+	height: 20px
+}
+/*向左选择按钮样式*/
+.SelLeftBTN {
+	cursor: hand;
+	background-image: url(../../images/DataWindow_buttonB.gif);
+	border-style: none;
+	width: 73px;
+	height: 20px
+}
+
+/*编辑，增加，查询窗口中，描述信息所在td*/
+.DescArea {
+	font-family: "宋体";
+	color: #000000;
+	background-color: #C1DBF5;
+	font-size: 13px
+}
+
+/*向右选择按钮样式*/
+.SelRightBTN {
+	cursor: hand;
+	background-image: url(../../images/DataWindow_buttonB.gif);
+	border-style: none;
+	width: 73px;
+	height: 20px
+}
+
+/*重置按钮样式*/
+.ResetBTN {
+	cursor: hand;
+	background-image: url(../../images/DataWindow_buttonB.gif);
+	border-style: none;
+	width: 73px;
+	height: 20px
+}
+
+/*================================================*/
+/* 设定超连的属性 */
+/*================================================*/
+A {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #000000;
+}
+
+A:active {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #000000;
+}
+
+A:link {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #000000;
+}
+
+A:visited {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #000000;
+}
+
+A:hover {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #FF0000;
+}
+
+A.notReaded {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #0000FF;
+}
+
+A.notReaded:active {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #0000FF;
+}
+
+A.notReaded:link {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #0000FF;
+}
+
+A.notReaded:visited {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: #0000FF;
+}
+
+A.notReaded:hover {
+	FONT-SIZE: 13px;
+	TEXT-decoration: underline;
+	COLOR: red;
+}

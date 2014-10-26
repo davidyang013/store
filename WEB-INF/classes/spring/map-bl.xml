@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="brandManagerDAO" class="com.yu.store.bl.dao.BrandManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="brandManagerBO" class="com.yu.store.bl.bo.BrandManagerBO">
+		<property name="brandManagerDAO" ref="brandManagerDAO" />
+	</bean>
+	
+	<bean id="brandManagerAction" class="com.yu.store.bl.action.BrandManagerAction" scope="prototype">
+		<property name="brandManagerBO" ref="brandManagerBO" />
+	</bean>
+	
+	<bean id="intoStoreManagerDAO" class="com.yu.store.bl.dao.IntoStoreManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="intoStoreManagerBO" class="com.yu.store.bl.bo.IntoStoreManagerBO">
+		<property name="intoStoreManagerDAO" ref="intoStoreManagerDAO" />
+	</bean>
+	
+	<bean id="intoStoreManagerAction" class="com.yu.store.bl.action.IntoStoreManagerAction" scope="prototype">
+		<property name="intoStoreManagerBO" ref="intoStoreManagerBO" />
+		<property name="brandManagerBO" ref="brandManagerBO" />
+	</bean>
+	
+	<bean id="outStoreManagerDAO" class="com.yu.store.bl.dao.OutStoreManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="outStoreManagerBO" class="com.yu.store.bl.bo.OutStoreManagerBO">
+		<property name="outStoreManagerDAO" ref="outStoreManagerDAO" />
+		<property name="intoStoreManagerDAO" ref="intoStoreManagerDAO" />
+		<property name="brandManagerDAO" ref="brandManagerDAO" />
+	</bean>
+	
+	<bean id="outStoreManagerAction" class="com.yu.store.bl.action.OutStoreManagerAction" scope="prototype">
+		<property name="outStoreManagerBO" ref="outStoreManagerBO" />
+		<property name="storageManagerBO" ref="storageManagerBO" />
+		<property name="brandManagerBO" ref="brandManagerBO" />
+		<property name="intoStoreManagerBO" ref="intoStoreManagerBO" />
+		<property name="memberManagerBO" ref="memberManagerBO" />
+	</bean>
+	
+	<bean id="storageManagerDAO" class="com.yu.store.bl.dao.StorageManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="storageManagerBO" class="com.yu.store.bl.bo.StorageManagerBO">
+		<property name="storageManagerDAO" ref="storageManagerDAO" />
+	</bean>
+	
+	<bean id="storageManagerAction" class="com.yu.store.bl.action.StorageManagerAction" scope="prototype">
+		<property name="storageManagerBO" ref="storageManagerBO" />
+	</bean>
+	
+	<bean id="profitManagerDAO" class="com.yu.store.bl.dao.ProfitManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="profitManagerBO" class="com.yu.store.bl.bo.ProfitManagerBO">
+		<property name="profitManagerDAO" ref="profitManagerDAO" />
+	</bean>
+	
+	<bean id="profitManagerAction" class="com.yu.store.bl.action.ProfitManagerAction" scope="prototype">
+		<property name="profitManagerBO" ref="profitManagerBO" />
+	</bean>
+	
+	<bean id="memberManagerDAO" class="com.yu.store.bl.dao.MemberManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="memberManagerBO" class="com.yu.store.bl.bo.MemberManagerBO">
+		<property name="memberManagerDAO" ref="memberManagerDAO" />
+	</bean>
+	
+	<bean id="memberManagerAction" class="com.yu.store.bl.action.MemberManagerAction" scope="prototype">
+		<property name="memberManagerBO" ref="memberManagerBO" />
+	</bean>
+	
+	<bean id="repairManagerDAO" class="com.yu.store.bl.dao.RepairManagerDAO">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="repairManagerBO" class="com.yu.store.bl.bo.RepairManagerBO">
+		<property name="repairManagerDAO" ref="repairManagerDAO" />
+	</bean>
+	
+	<bean id="repairManagerAction" class="com.yu.store.bl.action.RepairManagerAction" scope="prototype">
+		<property name="repairManagerBO" ref="repairManagerBO" />
+	</bean>
+</beans>
